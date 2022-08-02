@@ -5,7 +5,15 @@ import logging
 CUR_DIR = os.path.dirname(__file__)
 DATA_FILE = os.path.join(CUR_DIR, "data", "movies.json")
 
-
+# Recuperation des instances
+def get_movies():
+        movies_inst = []
+        with open(DATA_FILE, "r") as f:
+            movies_title = json.load(f)
+        
+        for movie_title in movies_title:
+            movies_inst.append(Movie(movie_title))
+        return movies_inst
 
 # Creation de la classe
 class Movie:
@@ -16,6 +24,7 @@ class Movie:
         return self.title
 
 # Lecture et ecriture du fichier contenant les films   
+    
     def _get_movies(self):
             with open(DATA_FILE, "r") as f:
                 return json.load(f)         
@@ -35,6 +44,14 @@ class Movie:
             logging.warning(f"{self.title} est deja dans la liste")
             return False
 
+    def remove_from_movies(self):
+        movies = self._get_movies()
+        if self.title in movies:
+            movies.remove(self.title)
+            self._write_movies(movies)
+            logging.warning(f"{self.title} a ete supp de la liste")
+
+
 if __name__ == "__main__":
-    m = Movie("Chouf")
-    m.add_to_movies()
+    movies = get_movies()
+    print(movies)
